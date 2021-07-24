@@ -21,7 +21,7 @@ async def on_ready(): # todo: get rid of "Detected discord.Client!" error
         randomlist = ('im back baby', 'https://cdn.discordapp.com/attachments/606550060284510218/837688700564406323/im_back_baby.mp4',)
         response = random.choice(randomlist)
         await channel.send(response)
-        await client.change_presence(activity=discord.Game(name="v3.132; /dzhelp"), status=discord.Status.dnd)
+        await client.change_presence(activity=discord.Game(name="v3.133; /dzhelp"), status=discord.Status.dnd)
         print('Connected to bot: {}'.format(client.user.name))
         print('Bot ID: {}'.format(client.user.id))
 
@@ -98,7 +98,7 @@ async def _ping(ctx):
 
 @slash.slash(name="dzhelp", guild_ids=guild_ids, description="Shows the help embed.")
 async def dzhelp(ctx):
-           embedhelp=discord.Embed(title="Džastbot v3.132 help menu", description="Welcome to džastbot help menu, here is a small command/feature list:")
+           embedhelp=discord.Embed(title="Džastbot v3.133 help menu", description="Welcome to džastbot help menu, here is a small command/feature list:")
            embedhelp.set_author(name="Džastbot", url="https://cdn.discordapp.com/attachments/695014904381440092/836329019292516392/sus16.png", icon_url="https://cdn.discordapp.com/avatars/695337101876789309/199d18d7311452261f0e3dcfe49fad32.png")
            embedhelp.add_field(name="/megadrop", value="/megadrop - posts link with every nfs build i (JA) could find up to 2020 xmas ", inline=False)
            embedhelp.add_field(name="/irr", value="/irr - Your post/This discussion meme", inline=False)
@@ -119,7 +119,7 @@ async def dzhelp(ctx):
 async def changelog(ctx):
            embed=discord.Embed(title="Džastbot changelog")
            embed.set_author(name="Džastbot", icon_url="https://cdn.discordapp.com/avatars/695337101876789309/199d18d7311452261f0e3dcfe49fad32.png", url="https://cdn.discordapp.com/attachments/695014904381440092/836329019292516392/sus16.png")
-           embed.add_field(name="reserved for future update", value="3.132 - yet another rewrite", inline=False)
+           embed.add_field(name="3.133 - beytah update", value="3.132 - yet another rewrite", inline=False)
            embed.add_field(name="2.131 - sadra and tanner update", value="2.128 - embed rework, zoomer repellent upd and no more crayon chewing", inline=False)
            embed.add_field(name="2.125-2.127 - zoomer repellent", value="2.124 - sus", inline=False)
            embed.add_field(name="2.123 - toast", value="2.122 - //funny upd", inline=False)
@@ -164,7 +164,7 @@ async def funny(ctx):
 
 @slash.slash(name="beytah", guild_ids=guild_ids, description="for lazy fucks")
 async def beytah(ctx):
-    await ctx.send("https://cdn.discordapp.com/attachments/705829278851268649/795080310576119848/ezgif-7-fe5f3082509e.gif")
+    await ctx.send("https://cdn.discordapp.com/attachments/792488969866182657/868453245415227422/gay7.gif")
 
 
 
