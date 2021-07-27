@@ -17,12 +17,8 @@ guild_ids = [635144592534011952]
 @client.event
 async def on_ready():  # todo: get rid of "Detected discord.Client!" error
     channel = client.get_channel(695014904381440092)
-    randomlist = (
-        'im back baby',
-        'https://cdn.discordapp.com/attachments/606550060284510218/837688700564406323/im_back_baby.mp4',)
-    response = random.choice(randomlist)
-    await channel.send(response)
-    await client.change_presence(activity=discord.Game(name="v3.133; /dzhelp"), status=discord.Status.dnd)
+    await channel.send(random.choice(('im back baby', 'https://cdn.discordapp.com/attachments/606550060284510218/837688700564406323/im_back_baby.mp4')))
+    await client.change_presence(activity=discord.Game(name="v3.135; /dzhelp"), status=discord.Status.dnd)
     print('Connected to bot: {}'.format(client.user.name))
     print('Bot ID: {}'.format(client.user.id))
 
@@ -53,6 +49,8 @@ async def on_message(message):
                   'https://media.discordapp.net/attachments/839090722464071720/842085327219982336/lego-pimps.png',
                   'https://cdn.discordapp.com/attachments/839090722464071720/840010604445564958/passponge.mp4']
     send = message.channel.send
+    amongus_check = message.content.lower()
+    trigger = "null"
 
     for i in range(len(word_list)):
         if message.content.lower().find(word_list[i]) != -1:
@@ -64,17 +62,7 @@ async def on_message(message):
 
     if message.channel.id != 660314906972651530 and message.content.lower().find(trigger) != -1:
 
-        if trigger == "sus":
-            response = random.choice(sus_list)
-            await send(file=discord.File(response))
-
-        if trigger == "amogus":
-            await send(file=discord.File(random.choice(sus_list)))
-
-        if trigger == "amongus":
-            await send(file=discord.File(random.choice(sus_list)))
-
-        if trigger == "among us":
+        if amongus_check == "sus" or amongus_check == "amogus" or amongus_check == "amongus" or amongus_check == "among us":
             await send(file=discord.File(random.choice(sus_list)))
 
         if trigger == "ancar":
@@ -114,8 +102,7 @@ async def on_message(message):
             await send(file=discord.File('assets/users/tanner.mov'))
 
         if trigger == "vtuber":
-            await message.channel.send(
-                'https://cdn.discordapp.com/attachments/644226511381069824/817003185955668038/Vtubers.mp4')
+            await message.channel.send('https://cdn.discordapp.com/attachments/644226511381069824/817003185955668038/Vtubers.mp4')
 
         if trigger == "pimps at sea":
             await message.channel.send(random.choice(pimps_list))
@@ -123,8 +110,11 @@ async def on_message(message):
         if trigger == "uwu" or trigger == "owo" or trigger == "x3":
             await message.add_reaction('🛑')
 
-        if message.channel.id == 660314906972651530 and not all(map(lambda x: x == '😃', ''.join(message.content.split()))):
-            await message.delete()
+        if trigger == "null":
+            await message.add_reaction('😳')
+
+    if message.channel.id == 660314906972651530 and not all(map(lambda x: x == '😃', ''.join(message.content.split()))):
+        await message.delete()
 
 
 @slash.slash(name="ping", guild_ids=guild_ids, description="Check ping to the bot.")
@@ -134,7 +124,7 @@ async def _ping(ctx):
 
 @slash.slash(name="dzhelp", guild_ids=guild_ids, description="Shows the help embed.")
 async def dzhelp(ctx):
-    embedhelp = discord.Embed(title="Džastbot v3.133 help menu",
+    embedhelp = discord.Embed(title="Džastbot v3.135 help menu",
                               description="Welcome to džastbot help menu, here is a small command/feature list:")
     embedhelp.set_author(name="Džastbot",
                          url="https://cdn.discordapp.com/attachments/695014904381440092/836329019292516392/sus16.png",
@@ -166,6 +156,7 @@ async def changelog(ctx):
     embed.set_author(name="Džastbot",
                      icon_url="https://cdn.discordapp.com/avatars/695337101876789309/199d18d7311452261f0e3dcfe49fad32.png",
                      url="https://cdn.discordapp.com/attachments/695014904381440092/836329019292516392/sus16.png")
+    embed.add_field(name="3.135 - hotfixes", value="3.134 - code optimizations thanks to TheMobas", inline=False)
     embed.add_field(name="3.133 - beytah update", value="3.132 - yet another rewrite", inline=False)
     embed.add_field(name="2.131 - sadra and tanner update",
                     value="2.128 - embed rework, zoomer repellent upd and no more crayon chewing", inline=False)
