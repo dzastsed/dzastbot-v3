@@ -1,0 +1,32 @@
+3.133 - beytah update
+3.132 - yet another rewrite
+2.131 - sadra and tanner update
+2.128 - embed rework, zoomer repellent upd and no more crayon chewing
+2.125-2.127 - zoomer repellent
+2.124 - sus
+2.123 - toast
+2.122 - //funny upd
+2.121 - trigger updates thanks to upside down fuck and grzegorz brzęczyszczykiewicz and everyone else
+2.120 - internal token upd
+2.119 - no more cat
+2.118 - jojo and pimps at sea update
+2.116 - im back baby
+2.115 - smiley channel edits update
+2.114 - moar sus pic
+2.113 - pimp at sea update
+2.111 - embeds update and bots blacklisted
+2.109 - smiley channel
+2.102 - added //megadrop
+2.99-2.100 - more sus pics
+2.98 - more triggers for sus pics
+2.97 - pimps at sea update
+2.96 - more sus pics
+2.94 - added //beytah
+2.92 - enabled smiley channel code
+2.85 - 2.91 - working on smiley channel revival, although disabled (code works though) plus one bugfix for sus response
+2.85 - changed //help to //dzhelp
+2.84 - updated //help and //changelog textbox
+2.83 - added //changelog command
+2.82 - added more sus pics
+2.81 - updated //help textbox
+CANT I JUST LEAVE THIS EMPTY
