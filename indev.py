@@ -17,8 +17,9 @@ guild_ids = [635144592534011952]
 @client.event
 async def on_ready():  # todo: get rid of "Detected discord.Client!" error
     channel = client.get_channel(695014904381440092)
-    await channel.send(random.choice(('im back baby', 'https://cdn.discordapp.com/attachments/606550060284510218/837688700564406323/im_back_baby.mp4')))
-    await client.change_presence(activity=discord.Game(name="v3.135; /dzhelp"), status=discord.Status.dnd)
+    await channel.send(random.choice(('im back baby',
+                                      'https://cdn.discordapp.com/attachments/606550060284510218/837688700564406323/im_back_baby.mp4')))
+    await client.change_presence(activity=discord.Game(name="v3.136; /dzhelp"), status=discord.Status.dnd)
     print('Connected to bot: {}'.format(client.user.name))
     print('Bot ID: {}'.format(client.user.id))
 
@@ -31,7 +32,6 @@ async def on_message_edit(after, message):
 
 @client.event
 async def on_message(message):
-
     word_list = ["sus", "amogus", "amongus", "among us", "ancar", "ancars", "depressing", "phantom", "creedoo", "jojo",
                  "switchuwu", "sadra", "aira", "a1ra", "catgirl", "toast", "tanner", "apple", "vtuber", "pimps at sea",
                  "uwu", "owo", "x3"]
@@ -65,16 +65,10 @@ async def on_message(message):
         if amongus_check == "sus" or amongus_check == "amogus" or amongus_check == "amongus" or amongus_check == "among us":
             await send(file=discord.File(random.choice(sus_list)))
 
-        if trigger == "ancar":
+        if trigger == "ancar" or trigger == "ancars":
             await send(file=discord.File('assets/users/ancar.jpg'))
 
-        if trigger == "ancars":
-            await send(file=discord.File('assets/users/ancar.jpg'))
-
-        if trigger == "depressing":
-            await send(file=discord.File('assets/users/quote.png'))
-
-        if trigger == "phantom":
+        if trigger == "depressing" or trigger == "phantom":
             await send(file=discord.File('assets/users/quote.png'))
 
         if trigger == "creedoo":
@@ -95,14 +89,12 @@ async def on_message(message):
         if trigger == "toast":
             await send(file=discord.File('assets/users/toast.png'))
 
-        if trigger == "tanner":
-            await send(file=discord.File('assets/users/tanner.mov'))
-
-        if trigger == "apple":
+        if trigger == "tanner" or trigger == "apple":
             await send(file=discord.File('assets/users/tanner.mov'))
 
         if trigger == "vtuber":
-            await message.channel.send('https://cdn.discordapp.com/attachments/644226511381069824/817003185955668038/Vtubers.mp4')
+            await message.channel.send(
+                'https://cdn.discordapp.com/attachments/644226511381069824/817003185955668038/Vtubers.mp4')
 
         if trigger == "pimps at sea":
             await message.channel.send(random.choice(pimps_list))
@@ -124,63 +116,53 @@ async def _ping(ctx):
 
 @slash.slash(name="dzhelp", guild_ids=guild_ids, description="Shows the help embed.")
 async def dzhelp(ctx):
-    embedhelp = discord.Embed(title="Džastbot v3.135 help menu",
-                              description="Welcome to džastbot help menu, here is a small command/feature list:")
-    embedhelp.set_author(name="Džastbot",
-                         url="https://cdn.discordapp.com/attachments/695014904381440092/836329019292516392/sus16.png",
-                         icon_url="https://cdn.discordapp.com/avatars/695337101876789309/199d18d7311452261f0e3dcfe49fad32.png")
-    embedhelp.add_field(name="/megadrop",
-                        value="/megadrop - posts link with every nfs build i (JA) could find up to 2020 xmas ",
-                        inline=False)
-    embedhelp.add_field(name="/irr", value="/irr - Your post/This discussion meme", inline=False)
-    embedhelp.add_field(name="/beytah", value="/beytah - for annoying fucks who cant read pins", inline=False)
-    embedhelp.add_field(name="/data", value="/data - dont ask to ask", inline=False)
-    embedhelp.add_field(name="/sanchez", value="/sanchez - inside joke only 10 people would get", inline=False)
-    embedhelp.add_field(name="/bs", value="/bs - Bullshit", inline=False)
-    embedhelp.add_field(name="/dzhelp", value="/dzhelp - Shows this message", inline=False)
-    embedhelp.add_field(name="/changelog", value="/changelog - changelog", inline=False)
-    embedhelp.add_field(name="/funny", value="funny - yes", inline=False)
-    embedhelp.add_field(name="/ping", value="shows ping to the bot", inline=False)
-    embedhelp.add_field(name="Misc:", value="/update and /loopback - things exclusive for JA (deprecated)",
-                        inline=False)
-    embedhelp.add_field(name="Other features:",
-                        value="Responds with a picture/video to words `Ancar` `Creedoo` `Phantom` `Switchuwu` `Jojo` `Vtuber` `Sus` `Among us` `Amogus` `Amongus` `Pimps at sea` `Catgirl` `Toast` `A1ra/Aira/Sadra` `Tanner` and `Depressing`",
-                        inline=False)
-    embedhelp.set_footer(text="fuck discord fr")
-    await ctx.send(embeds=[embedhelp])
+    help_embed = discord.Embed(title="Džastbot v3.136 help menu",
+                               description="Welcome to džastbot help menu, here is a small command/feature list:")
+    help_embed.set_author(name="Džastbot",
+                          url="https://cdn.discordapp.com/attachments/695014904381440092/836329019292516392/sus16.png",
+                          icon_url="https://cdn.discordapp.com/avatars/695337101876789309/199d18d7311452261f0e3dcfe49fad32.png")
+
+    help_menu = open("help_menu.txt", "r")
+    line_count = 0
+    for line in help_menu:
+        if line != "\n":
+            line_count += 1
+    help_menu.close()
+
+    help_menu = open("help_menu.txt", "r")
+    for i in range(int(line_count / 2)):
+        help_name = help_menu.readline()
+        help_value = help_menu.readline()
+        help_embed.add_field(name=help_name, value=help_value, inline=False)
+    help_menu.close()
+
+    help_embed.set_footer(text="fuck discord fr")
+    await ctx.send(embeds=[help_embed])
 
 
 @slash.slash(name="changelog", guild_ids=guild_ids, description="Shows the changelog embed.")
 async def changelog(ctx):
-    embed = discord.Embed(title="Džastbot changelog")
-    embed.set_author(name="Džastbot",
-                     icon_url="https://cdn.discordapp.com/avatars/695337101876789309/199d18d7311452261f0e3dcfe49fad32.png",
-                     url="https://cdn.discordapp.com/attachments/695014904381440092/836329019292516392/sus16.png")
-    embed.add_field(name="3.135 - hotfixes", value="3.134 - code optimizations thanks to TheMobas", inline=False)
-    embed.add_field(name="3.133 - beytah update", value="3.132 - yet another rewrite", inline=False)
-    embed.add_field(name="2.131 - sadra and tanner update",
-                    value="2.128 - embed rework, zoomer repellent upd and no more crayon chewing", inline=False)
-    embed.add_field(name="2.125-2.127 - zoomer repellent", value="2.124 - sus", inline=False)
-    embed.add_field(name="2.123 - toast", value="2.122 - //funny upd", inline=False)
-    embed.add_field(
-        name="2.121 - trigger updates thanks to upside down fuck and grzegorz brzęczyszczykiewicz and everyone else",
-        value="2.120 - internal token upd", inline=False)
-    embed.add_field(name="2.119 - no more cat", value="2.118 - jojo and pimps at sea update", inline=False)
-    embed.add_field(name="2.116 - im back baby", value="2.115 - smiley channel edits update", inline=False)
-    embed.add_field(name="2.114 - moar sus pic", value="2.113 - pimp at sea update", inline=False)
-    embed.add_field(name="2.111 - embeds update and bots blacklisted", value="2.109 - smiley channel", inline=False)
-    embed.add_field(name="2.102 - added //megadrop", value="2.99-2.100 - more sus pics", inline=False)
-    embed.add_field(name="2.98 - more triggers for sus pics", value="2.97 - pimps at sea update", inline=False)
-    embed.add_field(name="2.96 - more sus pics", value="2.94 - added //beytah", inline=False)
-    embed.add_field(name="2.92 - enabled smiley channel code",
-                    value="2.85 - 2.91 - working on smiley channel revival, although disabled (code works though) plus one bugfix for sus response",
-                    inline=False)
-    embed.add_field(name="2.85 - changed //help to //dzhelp", value="2.84 - updated //help and //changelog textbox",
-                    inline=False)
-    embed.add_field(name="2.83 - added //changelog command", value="2.82 - added more sus pics", inline=False)
-    embed.add_field(name="2.81 - updated //help textbox", value="CANT I JUST LEAVE THIS EMPTY", inline=False)
-    embed.set_footer(text="fuck discord fr")
-    await ctx.send(embeds=[embed])
+    changelog_embed = discord.Embed(title="Džastbot changelog")
+    changelog_embed.set_author(name="Džastbot",
+                               icon_url="https://cdn.discordapp.com/avatars/695337101876789309/199d18d7311452261f0e3dcfe49fad32.png",
+                               url="https://cdn.discordapp.com/attachments/695014904381440092/836329019292516392/sus16.png")
+
+    changelog_menu = open("changelog_menu.txt", "r")
+    line_count = 0
+    for line in changelog_menu:
+        if line != "\n":
+            line_count += 1
+    changelog_menu.close()
+
+    changelog_menu = open("changelog_menu.txt", "r")
+    for i in range(int(line_count/2)):
+        changelog_name = changelog_menu.readline()
+        changelog_value = changelog_menu.readline()
+        changelog_embed.add_field(name=changelog_name, value=changelog_value, inline=False)
+    changelog_menu.close()
+
+    changelog_embed.set_footer(text="fuck discord fr")
+    await ctx.send(embeds=[changelog_embed])
 
 
 @slash.slash(name="data", guild_ids=guild_ids, description="Sends \"Don't ask to ask\" picture.")
@@ -200,8 +182,7 @@ async def data(ctx):
 
 @slash.slash(name="megadrop", guild_ids=guild_ids, description="Sends MEGA link with all NFS builds.")
 async def megadrop(ctx):
-    await ctx.send(
-        "Mega folder with every nfs build I could find till 2020 xmas: <https://mega.nz/folder/u18FCRpQ#mQoqpPz_vAi5JgJeGhxoZA>")
+    await ctx.send("Mega folder with every nfs build I could find till 2020 xmas: <https://mega.nz/folder/u18FCRpQ#mQoqpPz_vAi5JgJeGhxoZA>")
 
 
 @slash.slash(name="bs", guild_ids=guild_ids, description="bullshit")
