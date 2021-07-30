@@ -19,12 +19,12 @@ async def on_ready():  # todo: get rid of "Detected discord.Client!" error
     channel = client.get_channel(695014904381440092)
     await channel.send(random.choice(('im back baby',
                                       'https://cdn.discordapp.com/attachments/606550060284510218/837688700564406323/im_back_baby.mp4')))
-    await client.change_presence(activity=discord.Game(name="v3.136; /dzhelp"), status=discord.Status.dnd)
+    await client.change_presence(activity=discord.Game(name="v3.137; /dzhelp"), status=discord.Status.dnd)
     print('Connected to bot: {}'.format(client.user.name))
     print('Bot ID: {}'.format(client.user.id))
 
 
-@client.event  # smiley channel edit prevention code
+@client.event  # Smiley Channel Edit Prevention
 async def on_message_edit(after, message):
     if message.channel.id == 660314906972651530 and not all(map(lambda x: x == '😃', ''.join(message.content.split()))):
         await message.delete()
@@ -105,8 +105,14 @@ async def on_message(message):
         if trigger == "null":
             await message.add_reaction('😳')
 
-    if message.channel.id == 660314906972651530 and not all(map(lambda x: x == '😃', ''.join(message.content.split()))):
-        await message.delete()
+    if message.channel.id == 660314906972651530:  # Smiley Channel Code
+
+        if not all(map(lambda x: x == '😃', ''.join(message.content.split()))):
+            await message.delete()
+
+        if not message.stickers:
+            await message.delete()
+            await message.channel.send("😃")
 
 
 @slash.slash(name="ping", guild_ids=guild_ids, description="Check ping to the bot.")
@@ -116,7 +122,7 @@ async def _ping(ctx):
 
 @slash.slash(name="dzhelp", guild_ids=guild_ids, description="Shows the help embed.")
 async def dzhelp(ctx):
-    help_embed = discord.Embed(title="Džastbot v3.136 help menu",
+    help_embed = discord.Embed(title="Džastbot v3.137 help menu",
                                description="Welcome to džastbot help menu, here is a small command/feature list:")
     help_embed.set_author(name="Džastbot",
                           url="https://cdn.discordapp.com/attachments/695014904381440092/836329019292516392/sus16.png",
@@ -155,7 +161,7 @@ async def changelog(ctx):
     changelog_menu.close()
 
     changelog_menu = open("changelog_menu.txt", "r")
-    for i in range(int(line_count/2)):
+    for i in range(int(line_count / 2)):
         changelog_name = changelog_menu.readline()
         changelog_value = changelog_menu.readline()
         changelog_embed.add_field(name=changelog_name, value=changelog_value, inline=False)
