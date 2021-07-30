@@ -1,3 +1,4 @@
+3.137 - smiley channel sticker prevention update
 3.136 - changelog and help menu optimisation
 3.135 - hotfixes
 3.134 - code optimizations thanks to TheMobas
