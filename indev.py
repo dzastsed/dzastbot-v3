@@ -1,36 +1,35 @@
 import discord
+from discord.ext import commands
 import os
 from discord_slash import SlashCommand
-from discord_slash.utils.manage_commands import create_option, create_choice, create_permission
-from discord_slash.model import SlashCommandPermissionType
 import random
 from dotenv import load_dotenv
 
-client = discord.Client(intents=discord.Intents.all())
-slash = SlashCommand(client, sync_commands=True)
+bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
+slash = SlashCommand(bot, sync_commands=True)
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 guild_ids = [635144592534011952]
 
 
-@client.event
-async def on_ready():  # todo: get rid of "Detected discord.Client!" error
-    channel = client.get_channel(695014904381440092)
+@bot.event
+async def on_ready():
+    channel = bot.get_channel(695014904381440092)
     await channel.send(random.choice(('im back baby',
                                       'https://cdn.discordapp.com/attachments/606550060284510218/837688700564406323/im_back_baby.mp4')))
-    await client.change_presence(activity=discord.Game(name="v3.137; /dzhelp"), status=discord.Status.dnd)
-    print('Connected to bot: {}'.format(client.user.name))
-    print('Bot ID: {}'.format(client.user.id))
+    await bot.change_presence(activity=discord.Game(name="v3.138; /dzhelp"), status=discord.Status.dnd)
+    print('Connected to bot: {}'.format(bot.user.name))
+    print('Bot ID: {}'.format(bot.user.id))
 
 
-@client.event  # Smiley Channel Edit Prevention
+@bot.event  # Smiley Channel Edit Prevention
 async def on_message_edit(after, message):
     if message.channel.id == 660314906972651530 and not all(map(lambda x: x == '😃', ''.join(message.content.split()))):
         await message.delete()
 
 
-@client.event
+@bot.event
 async def on_message(message):
     word_list = ["sus", "amogus", "amongus", "among us", "ancar", "ancars", "depressing", "phantom", "creedoo", "jojo",
                  "switchuwu", "sadra", "aira", "a1ra", "catgirl", "toast", "tanner", "apple", "vtuber", "pimps at sea",
@@ -53,14 +52,13 @@ async def on_message(message):
     trigger = "null"
 
     for i in range(len(word_list)):
-        if message.content.lower().find(word_list[i]) != -1:
+        if not message.content.lower().find(word_list[i]):
             trigger = word_list[i]
             break
-
     if message.author.bot:
         return
 
-    if message.channel.id != 660314906972651530 and message.content.lower().find(trigger) != -1:
+    if message.channel.id != 660314906972651530 and not message.content.lower().find(trigger):
 
         if amongus_check == "sus" or amongus_check == "amogus" or amongus_check == "amongus" or amongus_check == "among us":
             await send(file=discord.File(random.choice(sus_list)))
@@ -117,12 +115,12 @@ async def on_message(message):
 
 @slash.slash(name="ping", guild_ids=guild_ids, description="Check ping to the bot.")
 async def _ping(ctx):
-    await ctx.send(f"Pong! ({client.latency * 1000}ms)")
+    await ctx.send(f"Pong! ({round(bot.latency * 1000)}ms)")
 
 
 @slash.slash(name="dzhelp", guild_ids=guild_ids, description="Shows the help embed.")
 async def dzhelp(ctx):
-    help_embed = discord.Embed(title="Džastbot v3.137 help menu",
+    help_embed = discord.Embed(title="Džastbot v3.138 help menu",
                                description="Welcome to džastbot help menu, here is a small command/feature list:")
     help_embed.set_author(name="Džastbot",
                           url="https://cdn.discordapp.com/attachments/695014904381440092/836329019292516392/sus16.png",
@@ -206,4 +204,4 @@ async def beytah(ctx):
     await ctx.send("https://cdn.discordapp.com/attachments/792488969866182657/868453245415227422/gay7.gif")
 
 
-client.run(TOKEN)
+bot.run(TOKEN)
