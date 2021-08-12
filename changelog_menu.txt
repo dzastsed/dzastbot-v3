@@ -1,3 +1,4 @@
+3.139 - undone 3.137 update, so now smiley channel kinda works again and added new /reddit command.
 3.138 - quality of life improvements
 3.137 - smiley channel sticker prevention update
 3.136 - changelog and help menu optimisation
@@ -34,3 +35,4 @@
 2.83 - added //changelog command
 2.82 - added more sus pics
 2.81 - updated //help textbox
+CANT I JUST LEAVE THIS EMPTY
