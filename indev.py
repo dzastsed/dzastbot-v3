@@ -4,6 +4,9 @@ import os
 from discord_slash import SlashCommand
 import random
 from dotenv import load_dotenv
+from requests import Session
+from bs4 import BeautifulSoup
+
 
 bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
 slash = SlashCommand(bot, sync_commands=True)
@@ -103,14 +106,10 @@ async def on_message(message):
         if trigger == "null":
             await message.add_reaction('😳')
 
-    if message.channel.id == 660314906972651530:  # Smiley Channel Code
+    if message.channel.id == 660314906972651530:  # Smiley Channel Code, need to fix stickers in future
 
         if not all(map(lambda x: x == '😃', ''.join(message.content.split()))):
             await message.delete()
-
-        if not message.stickers:
-            await message.delete()
-            await message.channel.send("😃")
 
 
 @slash.slash(name="ping", guild_ids=guild_ids, description="Check ping to the bot.")
@@ -167,6 +166,42 @@ async def changelog(ctx):
 
     changelog_embed.set_footer(text="fuck discord fr")
     await ctx.send(embeds=[changelog_embed])
+
+
+@slash.slash(name="reddit", guild_ids=guild_ids, description="Finds a post from Reddit")
+async def reddit(ctx, keyword):
+    with Session() as s:
+        link_check = False
+        reddit_post_check = False
+        post_number = 0
+        headers = {'User-Agent': 'Mozilla/5.0'}
+        site = s.get("https://www.reddit.com/search/?q=" + keyword, headers=headers)
+        soup = BeautifulSoup(site.content, 'html.parser')
+        stuff = soup.find('div', class_='rpBJOHq2PR60pnwJlUyP0')
+        upvotes = stuff.find_all('div', class_='_1rZYMD_4xY3gRcSS3p8ODO _25IkBM0rRUqWX5ZojEMAFQ')
+        comments = stuff.find_all('span', class_='FHCV02u6Cp2zYL0fhQPsO')
+        post_name = stuff.find_all('h3', class_='_eYtD2XCVieq6emjKBH3m')
+
+        for a in soup.find_all('a', href=True):
+            image_link = (a['href'])
+            if image_link.startswith("https://i.redd.it/") or image_link.startswith("https://i.imgur.com/"):
+                link_check = True
+                for a in soup.find_all('a', href=True):
+                    reddit_post = (a['href'])
+                    if (a['href']) == image_link and not reddit_post_check:
+                        reddit_post_check = True
+                    if (reddit_post.startswith("https://www.reddit.com/r/")) and reddit_post_check:
+                        break
+                embed = discord.Embed(title=post_name[post_number].get_text(), url=reddit_post, color=0xff4500)
+                embed.set_image(url=image_link)
+                embed.set_footer(text=" 👍 " + upvotes[post_number].get_text() + "  |   💬 " + comments[post_number].get_text().replace('comments', '').replace('comment', ''))
+                await ctx.send(embed=embed)
+                break
+            else:
+                if image_link.startswith("https://www.reddit.com/r/"):
+                    post_number = post_number + 1
+        if not link_check:
+            print("Sorry, but I couldn't find anything like that...")
 
 
 @slash.slash(name="data", guild_ids=guild_ids, description="Sends \"Don't ask to ask\" picture.")
