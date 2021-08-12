@@ -1,3 +1,5 @@
+/reddit
+/reddit - Finds a post from Reddit
 /megadrop
 /megadrop - posts link with every nfs build i (JA) could find up to 2020 xmas
 /irr
