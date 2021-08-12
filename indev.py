@@ -21,7 +21,7 @@ async def on_ready():
     channel = bot.get_channel(695014904381440092)
     await channel.send(random.choice(('im back baby',
                                       'https://cdn.discordapp.com/attachments/606550060284510218/837688700564406323/im_back_baby.mp4')))
-    await bot.change_presence(activity=discord.Game(name="v3.138; /dzhelp"), status=discord.Status.dnd)
+    await bot.change_presence(activity=discord.Game(name="v3.139; /dzhelp"), status=discord.Status.dnd)
     print('Connected to bot: {}'.format(bot.user.name))
     print('Bot ID: {}'.format(bot.user.id))
 
@@ -119,7 +119,7 @@ async def _ping(ctx):
 
 @slash.slash(name="dzhelp", guild_ids=guild_ids, description="Shows the help embed.")
 async def dzhelp(ctx):
-    help_embed = discord.Embed(title="Džastbot v3.138 help menu",
+    help_embed = discord.Embed(title="Džastbot v3.139 help menu",
                                description="Welcome to džastbot help menu, here is a small command/feature list:")
     help_embed.set_author(name="Džastbot",
                           url="https://cdn.discordapp.com/attachments/695014904381440092/836329019292516392/sus16.png",
