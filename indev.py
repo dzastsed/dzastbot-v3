@@ -6,7 +6,8 @@ import random
 from dotenv import load_dotenv
 from requests import Session
 from bs4 import BeautifulSoup
-
+from PIL import Image
+import urllib.request
 
 bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
 slash = SlashCommand(bot, sync_commands=True)
@@ -14,6 +15,7 @@ slash = SlashCommand(bot, sync_commands=True)
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 guild_ids = [635144592534011952]
+current_version = "v3.140"
 
 
 @bot.event
@@ -21,7 +23,7 @@ async def on_ready():
     channel = bot.get_channel(695014904381440092)
     await channel.send(random.choice(('im back baby',
                                       'https://cdn.discordapp.com/attachments/606550060284510218/837688700564406323/im_back_baby.mp4')))
-    await bot.change_presence(activity=discord.Game(name="v3.139; /dzhelp"), status=discord.Status.dnd)
+    await bot.change_presence(activity=discord.Game(name=current_version + "; /dzhelp"), status=discord.Status.dnd)
     print('Connected to bot: {}'.format(bot.user.name))
     print('Bot ID: {}'.format(bot.user.id))
 
@@ -119,20 +121,20 @@ async def _ping(ctx):
 
 @slash.slash(name="dzhelp", guild_ids=guild_ids, description="Shows the help embed.")
 async def dzhelp(ctx):
-    help_embed = discord.Embed(title="Džastbot v3.139 help menu",
+    help_embed = discord.Embed(title="Džastbot " + current_version + " help menu",
                                description="Welcome to džastbot help menu, here is a small command/feature list:")
     help_embed.set_author(name="Džastbot",
                           url="https://cdn.discordapp.com/attachments/695014904381440092/836329019292516392/sus16.png",
                           icon_url="https://cdn.discordapp.com/avatars/695337101876789309/199d18d7311452261f0e3dcfe49fad32.png")
 
-    help_menu = open("help_menu.txt", "r")
+    help_menu = open("assets/menus/help_menu.txt", "r")
     line_count = 0
     for line in help_menu:
         if line != "\n":
             line_count += 1
     help_menu.close()
 
-    help_menu = open("help_menu.txt", "r")
+    help_menu = open("assets/menus/help_menu.txt", "r")
     for i in range(int(line_count / 2)):
         help_name = help_menu.readline()
         help_value = help_menu.readline()
@@ -150,14 +152,14 @@ async def changelog(ctx):
                                icon_url="https://cdn.discordapp.com/avatars/695337101876789309/199d18d7311452261f0e3dcfe49fad32.png",
                                url="https://cdn.discordapp.com/attachments/695014904381440092/836329019292516392/sus16.png")
 
-    changelog_menu = open("changelog_menu.txt", "r")
+    changelog_menu = open("assets/menus/changelog_menu.txt", "r")
     line_count = 0
     for line in changelog_menu:
         if line != "\n":
             line_count += 1
     changelog_menu.close()
 
-    changelog_menu = open("changelog_menu.txt", "r")
+    changelog_menu = open("assets/menus/changelog_menu.txt", "r")
     for i in range(int(line_count / 2)):
         changelog_name = changelog_menu.readline()
         changelog_value = changelog_menu.readline()
@@ -168,7 +170,7 @@ async def changelog(ctx):
     await ctx.send(embeds=[changelog_embed])
 
 
-@slash.slash(name="reddit", guild_ids=guild_ids, description="Finds a post from Reddit")
+@slash.slash(name="reddit", guild_ids=guild_ids, description="Finds a post from Reddit")  # prideti "timed out" errora ar kazka pns ir galbut pabandyt kazka kad leistu keleta zodziu kaip keyworda parasyt
 async def reddit(ctx, keyword):
     with Session() as s:
         link_check = False
@@ -178,30 +180,61 @@ async def reddit(ctx, keyword):
         site = s.get("https://www.reddit.com/search/?q=" + keyword, headers=headers)
         soup = BeautifulSoup(site.content, 'html.parser')
         stuff = soup.find('div', class_='rpBJOHq2PR60pnwJlUyP0')
-        upvotes = stuff.find_all('div', class_='_1rZYMD_4xY3gRcSS3p8ODO _25IkBM0rRUqWX5ZojEMAFQ')
-        comments = stuff.find_all('span', class_='FHCV02u6Cp2zYL0fhQPsO')
-        post_name = stuff.find_all('h3', class_='_eYtD2XCVieq6emjKBH3m')
 
-        for a in soup.find_all('a', href=True):
-            image_link = (a['href'])
-            if image_link.startswith("https://i.redd.it/") or image_link.startswith("https://i.imgur.com/"):
-                link_check = True
-                for a in soup.find_all('a', href=True):
-                    reddit_post = (a['href'])
-                    if (a['href']) == image_link and not reddit_post_check:
-                        reddit_post_check = True
-                    if (reddit_post.startswith("https://www.reddit.com/r/")) and reddit_post_check:
-                        break
-                embed = discord.Embed(title=post_name[post_number].get_text(), url=reddit_post, color=0xff4500)
-                embed.set_image(url=image_link)
-                embed.set_footer(text=" 👍 " + upvotes[post_number].get_text() + "  |   💬 " + comments[post_number].get_text().replace('comments', '').replace('comment', ''))
-                await ctx.send(embed=embed)
-                break
-            else:
-                if image_link.startswith("https://www.reddit.com/r/"):
-                    post_number = post_number + 1
-        if not link_check:
-            print("Sorry, but I couldn't find anything like that...")
+        if stuff is not None:
+            upvotes = stuff.find_all('div', class_='_1rZYMD_4xY3gRcSS3p8ODO _25IkBM0rRUqWX5ZojEMAFQ')
+            comments = stuff.find_all('span', class_='FHCV02u6Cp2zYL0fhQPsO')
+            post_name = stuff.find_all('h3', class_='_eYtD2XCVieq6emjKBH3m')
+
+            for a in soup.find_all('a', href=True):
+                image_link = (a['href'])
+                if image_link.startswith("https://i.redd.it/") or image_link.startswith("https://i.imgur.com/"):
+                    link_check = True
+                    for a in soup.find_all('a', href=True):
+                        reddit_post = (a['href'])
+                        if (a['href']) == image_link and not reddit_post_check:
+                            reddit_post_check = True
+                        if (reddit_post.startswith("https://www.reddit.com/r/")) and reddit_post_check:
+                            break
+                    embed = discord.Embed(title=post_name[post_number].get_text(), url=reddit_post, color=0xff4500)
+                    embed.set_image(url=image_link)
+                    embed.set_footer(text=" 👍 " + upvotes[post_number].get_text() + "  |   💬 " + comments[
+                        post_number].get_text().replace('comments', '').replace('comment', ''))
+                    await ctx.send(embed=embed)
+                    break
+                else:
+                    if image_link.startswith("https://www.reddit.com/r/"):
+                        post_number = post_number + 1
+            if not link_check:
+                await ctx.send("Sorry, but I couldn't find anything like that...")
+        else:
+            await ctx.send("Sorry, but I couldn't find anything like that...")
+
+
+@slash.slash(name="upsidedown", guild_ids=guild_ids, description="Flips a picture upside down")
+async def upsidedown(ctx, attachment=None):
+    file_type = None
+    if len(ctx.channel.last_message.attachments) != 0 and attachment is None:
+        attachment = ctx.channel.last_message.attachments[0].url
+    if attachment is not None:
+        if attachment.endswith(".jpg") or attachment.endswith(".bmp"):
+            file_type = ".jpg"
+        elif attachment.endswith(".png") or attachment.endswith(".webp"):
+            file_type = ".png"
+        else:
+            await ctx.send("Sorry, but I can't recognize your file...")
+        if file_type is not None:
+            opener = urllib.request.build_opener()
+            opener.addheaders = [('User-Agent', 'Mozilla/5.0')]
+            urllib.request.install_opener(opener)
+            urllib.request.urlretrieve(attachment, "assets/temp_data/temp_1" + file_type)
+
+            img = Image.open("assets/temp_data/temp_1" + file_type)
+            img = img.rotate(180)
+            img.save("assets/temp_data/temp_2" + file_type)
+            await ctx.send(file=discord.File("assets/temp_data/temp_2" + file_type))
+    else:
+        await ctx.send("Sorry, but I can't find your picture...")
 
 
 @slash.slash(name="data", guild_ids=guild_ids, description="Sends \"Don't ask to ask\" picture.")
@@ -221,7 +254,8 @@ async def data(ctx):
 
 @slash.slash(name="megadrop", guild_ids=guild_ids, description="Sends MEGA link with all NFS builds.")
 async def megadrop(ctx):
-    await ctx.send("Mega folder with every nfs build I could find till 2020 xmas: <https://mega.nz/folder/u18FCRpQ#mQoqpPz_vAi5JgJeGhxoZA>")
+    await ctx.send(
+        "Mega folder with every nfs build I could find till 2020 xmas: <https://mega.nz/folder/u18FCRpQ#mQoqpPz_vAi5JgJeGhxoZA>")
 
 
 @slash.slash(name="bs", guild_ids=guild_ids, description="bullshit")
