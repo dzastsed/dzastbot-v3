@@ -3,5 +3,5 @@ python-dotenv
 discord-py-slash-command
 requests
 bs4
-PIL
-urllib.request
+Pillow
+urllib3
