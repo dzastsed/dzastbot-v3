@@ -1,8 +1,9 @@
-3.140 - new /upsidedown command and a few code improvements
+3.141 - smiley channel sticker removal update (thx jason), and /restart command
+3.140 - /upsidedown command
 3.139 - undone 3.137 update, so now smiley channel kinda works again and added new /reddit command.
 3.138 - quality of life improvements
 3.137 - smiley channel sticker prevention update
-3.136 - changelog and help menu optimization
+3.136 - changelog and help menu optimisation
 3.135 - hotfixes
 3.134 - code optimizations thanks to TheMobas
 3.133 - beytah update
