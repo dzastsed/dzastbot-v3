@@ -29,7 +29,7 @@ async def on_ready():
 
 @bot.event  # Smiley Channel Edit Prevention
 async def on_message_edit(after, message):
-    if not all(map(lambda x: x == '😃', ''.join(message.content.split()))):
+    if message.channel.id == 660314906972651530 and not all(map(lambda x: x == '😃', ''.join(message.content.split()))):
         await message.delete()
 
 
