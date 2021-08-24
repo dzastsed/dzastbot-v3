@@ -1,13 +1,12 @@
-import discord
+import discord, os, os.path, sys, random, urllib.request
 from discord.ext import commands
-import os
 from discord_slash import SlashCommand
-import random
+from discord_slash.model import SlashCommandPermissionType
+from discord_slash.utils.manage_commands import create_permission
 from dotenv import load_dotenv
 from requests import Session
 from bs4 import BeautifulSoup
 from PIL import Image
-import urllib.request
 
 bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
 slash = SlashCommand(bot, sync_commands=True)
@@ -15,7 +14,7 @@ slash = SlashCommand(bot, sync_commands=True)
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 guild_ids = [635144592534011952]
-current_version = "v3.140"
+current_version = "v3.141"
 
 
 @bot.event
@@ -30,7 +29,7 @@ async def on_ready():
 
 @bot.event  # Smiley Channel Edit Prevention
 async def on_message_edit(after, message):
-    if message.channel.id == 660314906972651530 and not all(map(lambda x: x == '😃', ''.join(message.content.split()))):
+    if not all(map(lambda x: x == '😃', ''.join(message.content.split()))):
         await message.delete()
 
 
@@ -108,7 +107,10 @@ async def on_message(message):
         if trigger == "null":
             await message.add_reaction('😳')
 
-    if message.channel.id == 660314906972651530:  # Smiley Channel Code, need to fix stickers in future
+    if message.channel.id == 660314906972651530:
+
+        if not message.content:
+            await message.delete()
 
         if not all(map(lambda x: x == '😃', ''.join(message.content.split()))):
             await message.delete()
@@ -271,6 +273,23 @@ async def funny(ctx):
 @slash.slash(name="beytah", guild_ids=guild_ids, description="for lazy fucks")
 async def beytah(ctx):
     await ctx.send("https://cdn.discordapp.com/attachments/792488969866182657/868453245415227422/gay7.gif")
+
+@slash.slash(name="restart", guild_ids=guild_ids, description="restart the bot")
+@slash.permission(guild_id=635144592534011952,
+                    permissions=[
+                        create_permission(257906842942832640, SlashCommandPermissionType.USER, True),
+                        create_permission(261852392134279168, SlashCommandPermissionType.USER, True),
+                        create_permission(879710023863902269, SlashCommandPermissionType.ROLE, False),
+                        create_permission(635149040689872958, SlashCommandPermissionType.ROLE, False),
+                        create_permission(659764021779628060, SlashCommandPermissionType.ROLE, False),
+                        create_permission(771936469056356393, SlashCommandPermissionType.ROLE, False),
+                        create_permission(647882162057641995, SlashCommandPermissionType.ROLE, False)
+                        ])
+async def restart(ctx):
+  await ctx.send("Restarted")
+  os.system("clear")
+  os.execv(sys.executable, ['python'] + sys.argv)
+  
 
 
 bot.run(TOKEN)
