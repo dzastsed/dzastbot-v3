@@ -13,7 +13,7 @@ slash = SlashCommand(bot, sync_commands=True)
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
-guild_ids = [635144592534011952]
+guild_ids = [635144592534011952, 606548517594595329, 340493057390804993]
 current_version = "v3.142"
 
 
