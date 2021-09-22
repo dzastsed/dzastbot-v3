@@ -1,8 +1,8 @@
-import discord, os, os.path, sys, random, urllib.request
+import discord, os, os.path, sys, random, urllib.request, requests
 from discord.ext import commands
 from discord_slash import SlashCommand
 from discord_slash.model import SlashCommandPermissionType
-from discord_slash.utils.manage_commands import create_permission
+from discord_slash.utils.manage_commands import create_permission, create_option, create_choice
 from dotenv import load_dotenv
 from requests import Session
 from bs4 import BeautifulSoup
@@ -14,14 +14,13 @@ slash = SlashCommand(bot, sync_commands=True)
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 guild_ids = [635144592534011952]
-current_version = "v3.141"
+current_version = "v3.142"
 
 
 @bot.event
 async def on_ready():
     channel = bot.get_channel(695014904381440092)
-    await channel.send(random.choice(('im back baby',
-                                      'https://cdn.discordapp.com/attachments/606550060284510218/837688700564406323/im_back_baby.mp4')))
+    await channel.send(random.choice(('im back baby', 'https://cdn.discordapp.com/attachments/606550060284510218/837688700564406323/im_back_baby.mp4', 'https://cdn.discordapp.com/attachments/695014904381440092/885951151441322014/baby.mp4')))
     await bot.change_presence(activity=discord.Game(name=current_version + "; /dzhelp"), status=discord.Status.dnd)
     print('Connected to bot: {}'.format(bot.user.name))
     print('Bot ID: {}'.format(bot.user.id))
@@ -259,6 +258,12 @@ async def megadrop(ctx):
     await ctx.send(
         "Mega folder with every nfs build I could find till 2020 xmas: <https://mega.nz/folder/u18FCRpQ#mQoqpPz_vAi5JgJeGhxoZA>")
 
+@slash.slash(name="thisserver", guild_ids=guild_ids, description="funniest shit ive seen in my life")
+async def megadrop(ctx):
+    await ctx.send(
+        "Literally this server https://cdn.discordapp.com/attachments/719630423948263515/889571772117155861/rapbattl.mp4")
+
+
 
 @slash.slash(name="bs", guild_ids=guild_ids, description="bullshit")
 async def bs(ctx):
@@ -273,6 +278,103 @@ async def funny(ctx):
 @slash.slash(name="beytah", guild_ids=guild_ids, description="for lazy fucks")
 async def beytah(ctx):
     await ctx.send("https://cdn.discordapp.com/attachments/792488969866182657/868453245415227422/gay7.gif")
+
+@slash.slash(name="nekopic", guild_ids=guild_ids, description="sends a random neko pic (multiple choices)",
+             options=[
+               create_option(
+                 name="nekopic",
+                 description="Nekopic",
+                 option_type=3,
+                 required=True,
+                 choices=[create_choice(name="Neko Gif", value="ngif"), create_choice(name="Smug", value="smug"), create_choice(name="Pat", value="pat"), create_choice(name="Hug", value="hug"), create_choice(name="Fox girl", value="fox_girl"), create_choice(name="Waifu", value="waifu"), create_choice(name="Tickle", value="tickle"), create_choice(name="Neko", value="neko"), create_choice(name="Feeding", value="feed"), create_choice(name="Wallpaper", value="wallpaper"), create_choice(name="Avatar", value="avatar"), create_choice(name="Baka", value="baka"), create_choice(name="Kiss", value="kiss"), create_choice(name="Slap", value="slap"), create_choice(name="Genetically engineered catgirs (the fuck)", value="gecg")])])
+async def data(ctx, nekopic):
+        #if not channel.id == 753600461004603402:
+         #   return
+        response = requests.get('https://nekos.life/api/v2/img/{}'.format(nekopic))
+        data = response.json()
+        print(data)
+        await ctx.send(data['url'])
+
+@slash.slash(name="nsfwneko1", guild_ids=guild_ids, description="sends a random nsfw neko pic (only works in nsfw channel) (multiple choices) (part 1)",
+             options=[
+               create_option(
+                 name="nsfwneko1",
+                 description="nsfw neko part 1",
+                 option_type=3,
+                 required=True,
+                 choices=[create_choice(name="Classic (sfw my ass)", value="classic"),
+                  create_choice(name="Hentai", value="hentai"),
+                  create_choice(name="Random hentai gif", value="Random_hentai_gif"),                  
+                  create_choice(name="Yuri", value="yuri"),
+                  create_choice(name="Les (yuri 2?)", value="les"),
+                  create_choice(name="Erotic yuri", value="eroyuri"),
+                  create_choice(name="Erotic feet", value="erofeet"),
+                  create_choice(name="Feet gif", value="feetg"),
+                  create_choice(name="Feet", value="feet"),                  
+                  create_choice(name="Keta (loli?)", value="keta"),
+                  create_choice(name="Tits", value="tits"),
+                  create_choice(name="Boobs", value="boobs"),
+                  create_choice(name="Pussy", value="pussy_jpg"),
+                  create_choice(name="Pussy gif", value="pussy"),
+                  create_choice(name="Solo", value="solo"),
+                  create_choice(name="Solo gif", value="solog"),
+                  create_choice(name="Cum", value="cum_jpg"),
+                  create_choice(name="Cum gif", value="cum"),
+                  create_choice(name="Lewd kemo", value="lewdkemo"),
+                  create_choice(name="Lewd", value="lewd"),
+                  create_choice(name="Anal", value="anal"),
+                  create_choice(name="Nsfw avatar", value="nsfw_avatar"),
+                  create_choice(name="Futa", value="smallboobs"),
+                  create_choice(name="Trap", value="smallboobs"),
+
+                  ])])
+async def data(ctx, nsfwneko1):
+        if ctx.channel.id == 728354577115644014:
+            await ctx.send('are u an idiot this aint #nsfw-advanced')
+            return
+        elif not ctx.channel.id == 719231358194417744 or ctx.channel.id == 526014782827134986:
+            await ctx.send('bro read the description, this command works only in nsfw channel')
+            return
+        else:
+            response = requests.get('https://nekos.life/api/v2/img/{}'.format(nsfwneko1))
+            data = response.json()
+            print(data)
+            await ctx.send(data['url'])
+
+@slash.slash(name="nsfwneko2", guild_ids=guild_ids, description="sends a random nsfw neko pic (only works in nsfw channel) (multiple choices) (part 2)",
+             options=[
+               create_option(
+                 name="nsfwneko2",
+                 description="nsfw neko part 2",
+                 option_type=3,
+                 required=True,
+                 choices=[create_choice(name="Ero", value="ero"),
+                  create_choice(name="Ero neko", value="eron"),
+                  create_choice(name="Nsfw neko gif", value="nsfw_neko_gif"),
+                  create_choice(name="Holo (rarely nsfw so in here)", value="holo"),
+                  create_choice(name="Holo erotic", value="holoero"),
+                  create_choice(name="Holo lewd", value="hololewd"),
+                  create_choice(name="Ero Kemo", value="erokemo"),  
+                  create_choice(name="Erotic Kitsune", value="erok"),
+                  create_choice(name="Lewd Kitsune", value="lewdk"),                
+                  create_choice(name="Blowjob gif", value="bj"),
+                  create_choice(name="Blowjob", value="blowjob"),
+                  create_choice(name="gasm", value="smallboobs"),                  
+                  create_choice(name="Femdom", value="femdom"),
+                  create_choice(name="Spank", value="spank"),
+                  create_choice(name="Pwank(?) gif", value="pwankg")])])
+async def data(ctx, nsfwneko2):
+        if ctx.channel.id == 728354577115644014:
+            await ctx.send('are u an idiot this aint #nsfw-advanced')
+            return
+        elif not ctx.channel.id == 719231358194417744 or ctx.channel.id == 526014782827134986:
+            await ctx.send('bro read the description, this command works only in nsfw channel')
+            return
+        else:
+            response = requests.get('https://nekos.life/api/v2/img/{}'.format(nsfwneko2))
+            data = response.json()
+            print(data)
+            await ctx.send(data['url'])
 
 @slash.slash(name="restart", guild_ids=guild_ids, description="restart the bot")
 @slash.permission(guild_id=635144592534011952,
