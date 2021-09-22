@@ -1,5 +1,3 @@
-/upsidedown
-/upsidedown - Flips a picture upside down
 /reddit
 /reddit - Finds a post from Reddit
 /megadrop
@@ -22,6 +20,10 @@
 funny - yes
 /ping
 shows ping to the bot
+/nekopic
+sends anime girl pics (multiple choices)
+/nsfwneko1 and /nsfwneko2
+sends a random nsfw neko pic (only works in nsfw channel) (multiple choices)
 Misc:
 /update and /loopback - things exclusive for JA (deprecated)
 Other features:
