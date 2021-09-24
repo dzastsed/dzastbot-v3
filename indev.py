@@ -332,14 +332,15 @@ async def data(ctx, nsfwneko1):
         if ctx.channel.id == 728354577115644014:
             await ctx.send('are u an idiot this aint #nsfw-advanced')
             return
-        elif not ctx.channel.id == 719231358194417744 or ctx.channel.id == 526014782827134986:
-            await ctx.send('bro read the description, this command works only in nsfw channel')
-            return
-        else:
+        elif ctx.channel.is_nsfw():
             response = requests.get('https://nekos.life/api/v2/img/{}'.format(nsfwneko1))
             data = response.json()
             print(data)
             await ctx.send(data['url'])
+        else:
+            await ctx.send('bro read the description, this command works only in nsfw channel')
+            return
+            
 
 @slash.slash(name="nsfwneko2", guild_ids=guild_ids, description="sends a random nsfw neko pic (only works in nsfw channel) (multiple choices) (part 2)",
              options=[
@@ -367,14 +368,14 @@ async def data(ctx, nsfwneko2):
         if ctx.channel.id == 728354577115644014:
             await ctx.send('are u an idiot this aint #nsfw-advanced')
             return
-        elif not ctx.channel.id == 719231358194417744 or ctx.channel.id == 526014782827134986:
-            await ctx.send('bro read the description, this command works only in nsfw channel')
-            return
-        else:
+        elif ctx.channel.is_nsfw():
             response = requests.get('https://nekos.life/api/v2/img/{}'.format(nsfwneko2))
             data = response.json()
             print(data)
             await ctx.send(data['url'])
+        else:
+            await ctx.send('bro read the description, this command works only in nsfw channel')
+            return
 
 @slash.slash(name="restart", guild_ids=guild_ids, description="restart the bot")
 @slash.permission(guild_id=635144592534011952,
