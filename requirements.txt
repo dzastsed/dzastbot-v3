@@ -1,6 +1,6 @@
-py-cord
+py-cord==1.7.3
 python-dotenv
-discord-py-slash-command
+discord-py-slash-command==3.0.3
 requests
 bs4
 Pillow
