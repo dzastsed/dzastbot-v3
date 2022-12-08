@@ -1,3 +1,4 @@
+3.143 - died soz
 3.142 - added /nekopic, /nekonsfw commands
 3.141 - smiley channel sticker removal update (thx jason), and /restart command
 3.140 - /upsidedown command

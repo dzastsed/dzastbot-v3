@@ -14,7 +14,7 @@ slash = SlashCommand(bot, sync_commands=True)
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 guild_ids = [635144592534011952, 606548517594595329, 340493057390804993]
-current_version = "v3.142"
+current_version = "v3.143"
 
 
 @bot.event
@@ -256,7 +256,7 @@ async def data(ctx):
 @slash.slash(name="megadrop", guild_ids=guild_ids, description="Sends MEGA link with all NFS builds.")
 async def megadrop(ctx):
     await ctx.send(
-        "Mega folder with every nfs build I could find till 2020 xmas: <https://mega.nz/folder/u18FCRpQ#mQoqpPz_vAi5JgJeGhxoZA>")
+        "Mega folder with every nfs build I could find till 2022 summer: <https://mega.nz/folder/u18FCRpQ#mQoqpPz_vAi5JgJeGhxoZA>")
 
 @slash.slash(name="thisserver", guild_ids=guild_ids, description="funniest shit ive seen in my life")
 async def megadrop(ctx):
@@ -278,6 +278,10 @@ async def funny(ctx):
 @slash.slash(name="beytah", guild_ids=guild_ids, description="for lazy fucks")
 async def beytah(ctx):
     await ctx.send("https://cdn.discordapp.com/attachments/792488969866182657/868453245415227422/gay7.gif")
+
+@slash.slash(name="died", guild_ids=guild_ids, description="died soz")
+async def died(ctx):
+    await ctx.send("https://cdn.discordapp.com/attachments/340493057390804993/834084789552283698/unknown.png")
 
 @slash.slash(name="nekopic", guild_ids=guild_ids, description="sends a random neko pic (multiple choices)",
              options=[
@@ -388,6 +392,7 @@ async def data(ctx, nsfwneko2):
                         create_permission(771936469056356393, SlashCommandPermissionType.ROLE, False),
                         create_permission(647882162057641995, SlashCommandPermissionType.ROLE, False)
                         ])
+
 async def restart(ctx):
   await ctx.send("Restarted")
   os.system("clear")
