@@ -5,3 +5,4 @@ requests
 bs4
 Pillow
 urllib3
+discord.py=1.7.3
