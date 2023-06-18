@@ -14,7 +14,8 @@ slash = SlashCommand(bot, sync_commands=True)
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 guild_ids = [635144592534011952, 606548517594595329, 340493057390804993]
-current_version = "v3.143"
+guild_idsadm = [635144592534011952]
+current_version = "v3.145"
 
 
 @bot.event
@@ -41,7 +42,8 @@ async def on_message(message):
                 'assets/sus/sus5.jpg', 'assets/sus/sus6.png', 'assets/sus/sus7.png', 'assets/sus/sus8.jpg',
                 'assets/sus/sus9.png', 'assets/sus/sus10.jpg', 'assets/sus/sus11.mp4', 'assets/sus/sus12.png',
                 'assets/sus/sus13.mp4', 'assets/sus/sus14.mp4', 'assets/sus/sus15.mp4', 'assets/sus/sus16.png',
-                'assets/sus/sus17.jpg', 'assets/sus/sus18.mov', 'assets/sus/sus19.png']
+                'assets/sus/sus17.jpg', 'assets/sus/sus18.mov', 'assets/sus/sus19.png', 'assets/sus/sus20.png',
+                'assets/sus/sus21.png', 'assets/sus/sus22.png', 'assets/sus/sus23.png']
     jojo_list = ['assets/misc/jojo.mp4', 'assets/misc/jojo2.mp4']
     pimps_list = ['https://media.discordapp.net/attachments/644226511381069824/828733114464993300/pingdariogreggio.gif',
                   'https://cdn.discordapp.com/attachments/487367223808098304/836337916023406662/PimpsAtSeaDarioGreggio.mp4',
@@ -299,7 +301,7 @@ async def data(ctx, nekopic):
         print(data)
         await ctx.send(data['url'])
 
-@slash.slash(name="restart", guild_ids=guild_ids, description="restart the bot")
+@slash.slash(name="restart", guild_ids=guild_idsadm, description="restart the bot")
 @slash.permission(guild_id=635144592534011952,
                     permissions=[
                         create_permission(257906842942832640, SlashCommandPermissionType.USER, True),
