@@ -15,7 +15,7 @@ load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 guild_ids = [635144592534011952, 606548517594595329, 340493057390804993]
 guild_idsadm = [635144592534011952]
-current_version = "v3.145"
+current_version = "v3.147"
 
 
 @bot.event
@@ -255,11 +255,6 @@ async def data(ctx):
     await ctx.send(file=discord.File(r'assets/misc/sanchez.mp3'))
 
 
-@slash.slash(name="megadrop", guild_ids=guild_ids, description="Sends MEGA link with all NFS builds.")
-async def megadrop(ctx):
-    await ctx.send(
-        "Mega folder with every nfs build I could find till 2022 summer: <https://mega.nz/folder/u18FCRpQ#mQoqpPz_vAi5JgJeGhxoZA>")
-
 @slash.slash(name="thisserver", guild_ids=guild_ids, description="funniest shit ive seen in my life")
 async def megadrop(ctx):
     await ctx.send(
@@ -279,7 +274,7 @@ async def funny(ctx):
 
 @slash.slash(name="beytah", guild_ids=guild_ids, description="for lazy fucks")
 async def beytah(ctx):
-    await ctx.send("https://cdn.discordapp.com/attachments/792488969866182657/868453245415227422/gay7.gif")
+    await ctx.send("https://cdn.discordapp.com/attachments/635144592534011958/1212321805952487464/gay7-ezgif.com-resize.gif")
 
 @slash.slash(name="died", guild_ids=guild_ids, description="died soz")
 async def died(ctx):

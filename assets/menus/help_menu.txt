@@ -1,7 +1,5 @@
 /reddit
 /reddit - Finds a post from Reddit
-/megadrop
-/megadrop - posts link with every nfs build i (JA) could find up to 2020 xmas
 /irr
 /irr - Your post/This discussion meme
 /beytah
@@ -22,9 +20,5 @@ funny - yes
 shows ping to the bot
 /nekopic
 sends anime girl pics (multiple choices)
-/nsfwneko1 and /nsfwneko2
-sends a random nsfw neko pic (only works in nsfw channel) (multiple choices)
-Misc:
-/update and /loopback - things exclusive for JA (deprecated)
 Other features:
 Responds with a picture/video to words `Ancar` `Creedoo` `Phantom` `Switchuwu` `Jojo` `Vtuber` `Sus` `Among us` `Amogus` `Amongus` `Pimps at sea` `Catgirl` `Toast` `A1ra/Aira/Sadra` `Tanner` and `Depressing`
