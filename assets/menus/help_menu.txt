@@ -1,5 +1,7 @@
 /reddit
 /reddit - Finds a post from Reddit
+/megadrop
+/megadrop - sends a list of NFS build links
 /irr
 /irr - Your post/This discussion meme
 /beytah

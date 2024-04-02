@@ -1,4 +1,4 @@
-import discord, os, os.path, sys, random, urllib.request, requests
+import discord, os, os.path, sys, random, urllib.request, requests, DiscordUtils
 from discord.ext import commands
 from discord_slash import SlashCommand
 from discord_slash.model import SlashCommandPermissionType
@@ -8,6 +8,7 @@ from requests import Session
 from bs4 import BeautifulSoup
 from PIL import Image
 
+
 bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
 slash = SlashCommand(bot, sync_commands=True)
 
@@ -15,8 +16,7 @@ load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 guild_ids = [635144592534011952, 606548517594595329, 340493057390804993]
 guild_idsadm = [635144592534011952]
-current_version = "v3.147"
-
+current_version = "v3.148"
 
 @bot.event
 async def on_ready():
@@ -32,6 +32,11 @@ async def on_message_edit(after, message):
     if message.channel.id == 660314906972651530 and not all(map(lambda x: x == '😃', ''.join(message.content.split()))):
         await message.delete()
 
+@bot.event
+async def on_member_join(member):
+    guild = bot.get_guild(635144592534011952)
+    role = discord.utils.get(member.guild.roles, id=635152131208380436)
+    await member.add_roles(role)
 
 @bot.event
 async def on_message(message):
@@ -244,6 +249,9 @@ async def upsidedown(ctx, attachment=None):
 async def data(ctx):
     await ctx.send(file=discord.File(r'assets/misc/data.png'))
 
+@slash.slash(name="megadrop", guild_ids=guild_ids, description="Sends rentry link with all NFS build uploads.")
+async def megadrop(ctx):
+    await ctx.send("Masterlist of all builds up to 2024-04-02 (still WIP): https://rentry.org/nfs-builds-masterlist")
 
 @slash.slash(name="irr", guild_ids=guild_ids, description="Sends \"This discussion/Your post\" picture.")
 async def irr(ctx):
