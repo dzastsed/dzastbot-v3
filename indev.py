@@ -246,9 +246,9 @@ async def upsidedown(ctx, attachment=None):
 async def data(ctx):
     await ctx.send(file=discord.File(r'assets/misc/data.png'))
 
-@slash.slash(name="megadrop", guild_ids=guild_ids, description="Sends rentry link with all NFS build uploads.")
+@slash.slash(name="megadrop", guild_ids=guild_ids, description="Sends link with all NFS build uploads.")
 async def megadrop(ctx):
-    await ctx.send("Masterlist of all builds up to 2024-04-02 (still WIP): https://rentry.org/nfs-builds-masterlist")
+    await ctx.send("Masterlist of all builds up to 2024-12-05: https://dzastsed.github.io/nfs-builds.html")
 
 @slash.slash(name="irr", guild_ids=guild_ids, description="Sends \"This discussion/Your post\" picture.")
 async def irr(ctx):
