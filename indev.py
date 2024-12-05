@@ -52,11 +52,8 @@ async def on_message(message):
     jojo_list = ['assets/misc/jojo.mp4', 'assets/misc/jojo2.mp4']
     pimps_list = ['https://media.discordapp.net/attachments/644226511381069824/828733114464993300/pingdariogreggio.gif',
                   'https://cdn.discordapp.com/attachments/487367223808098304/836337916023406662/PimpsAtSeaDarioGreggio.mp4',
-                  'https://cdn.discordapp.com/attachments/839090722464071720/842457988085317632/pimps_ds.png',
                   'https://cdn.discordapp.com/attachments/487367223808098304/842238106819231744/PimpsAtSeaMadMen.mp4',
-                  'https://media.discordapp.net/attachments/839090722464071720/842190590841585694/pas-amog-us.png',
-                  'https://media.discordapp.net/attachments/839090722464071720/842085327219982336/lego-pimps.png',
-                  'https://cdn.discordapp.com/attachments/839090722464071720/840010604445564958/passponge.mp4']
+                  'https://cdn.discordapp.com/attachments/340499300754915329/1314243239498481674/pimps-remaster.mp4']
     send = message.channel.send
     amongus_check = message.content.lower()
     trigger = "null"
@@ -249,9 +246,9 @@ async def upsidedown(ctx, attachment=None):
 async def data(ctx):
     await ctx.send(file=discord.File(r'assets/misc/data.png'))
 
-@slash.slash(name="megadrop", guild_ids=guild_ids, description="Sends a link with all NFS build uploads.")
+@slash.slash(name="megadrop", guild_ids=guild_ids, description="Sends rentry link with all NFS build uploads.")
 async def megadrop(ctx):
-    await ctx.send("Masterlist of all builds up to 2024-04-02 (still WIP): https://dzastsed.github.io/nfs-builds.html")
+    await ctx.send("Masterlist of all builds up to 2024-04-02 (still WIP): https://rentry.org/nfs-builds-masterlist")
 
 @slash.slash(name="irr", guild_ids=guild_ids, description="Sends \"This discussion/Your post\" picture.")
 async def irr(ctx):
