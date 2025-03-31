@@ -1,4 +1,4 @@
-import discord, os, os.path, sys, random, urllib.request, requests, DiscordUtils
+import discord, os, os.path, sys, random, urllib.request, requests,  logging
 from discord.ext import commands
 from discord_slash import SlashCommand
 from discord_slash.model import SlashCommandPermissionType
@@ -8,7 +8,6 @@ from requests import Session
 from bs4 import BeautifulSoup
 from PIL import Image
 
-
 bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
 slash = SlashCommand(bot, sync_commands=True)
 
@@ -16,7 +15,26 @@ load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 guild_ids = [635144592534011952, 606548517594595329, 340493057390804993]
 guild_idsadm = [635144592534011952]
-current_version = "v3.148"
+current_version = "v3.149"
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("discord")
+
+CRC12_POLYNOMIAL = 0x80F
+CRC12_WIDTH = 12
+CRC12_TOPBIT = (1 << (CRC12_WIDTH - 1))
+
+def crc12(data: bytes) -> int:
+    remainder = 0
+    for byte in data:
+        remainder ^= (byte << (CRC12_WIDTH - 8))
+        for _ in range(8):
+            if remainder & CRC12_TOPBIT:
+                remainder = (remainder << 1) ^ CRC12_POLYNOMIAL
+            else:
+                remainder = (remainder << 1)
+            remainder &= ((1 << CRC12_WIDTH) - 1)  # Mask to CRC-12 width
+    return remainder
 
 @bot.event
 async def on_ready():
@@ -64,8 +82,29 @@ async def on_message(message):
             break
     if message.author.bot:
         return
+    
+
+    if message.content:  
+        crc = crc12(message.content.encode())
+        print(f"Received message: '{message.content}', CRC12 hash: {crc}")
+
+    bmessage = str.encode(message.content)
+
+    if crc12(bmessage) == 359:   
+            try:
+                await send(file=discord.File('assets/users/sadra.jpg'))
+                print("sending pic")
+            except:
+                safe_channel = bot.get_channel(340499300754915329)
+                author_name = message.author.nick if message.author.nick else message.author.name
+                embed = discord.Embed(title=author_name, url=message.jump_url, description=message.content)
+                embed.set_thumbnail(url=message.author.avatar.url)
+                embed.set_footer(text=f"#{message.channel.name}")
+                await safe_channel.send(file=discord.File('assets/users/sadra.jpg'))
 
     if message.channel.id != 660314906972651530 and not message.content.lower().find(trigger):
+
+        
 
         if amongus_check == "sus" or amongus_check == "amogus" or amongus_check == "amongus" or amongus_check == "among us":
             await send(file=discord.File(random.choice(sus_list)))
@@ -85,8 +124,6 @@ async def on_message(message):
         if trigger == "switchuwu":
             await send(file=discord.File('assets/users/switch.png'))
 
-        if trigger == "sadra" or trigger == "aira" or trigger == "a1ra":
-            await send(file=discord.File('assets/users/sadra.jpg'))
 
         if trigger == "catgirl":
             await send(file=discord.File('assets/users/cat2.png'))
@@ -107,8 +144,8 @@ async def on_message(message):
         if trigger == "uwu" or trigger == "owo" or trigger == "x3":
             await message.add_reaction('🛑')
 
-        if trigger == "null":
-            await message.add_reaction('😳')
+        # if trigger == "null":
+        #     await message.add_reaction('😳')
 
     if message.channel.id == 660314906972651530:
 
