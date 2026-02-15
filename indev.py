@@ -15,7 +15,7 @@ load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 guild_ids = [635144592534011952, 606548517594595329, 340493057390804993]
 guild_idsadm = [635144592534011952]
-current_version = "v3.149"
+current_version = "v3.150"
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("discord")
@@ -80,7 +80,7 @@ async def on_message(message):
         if not message.content.lower().find(word_list[i]):
             trigger = word_list[i]
             break
-    if message.author.bot:
+    if message.author == bot.user:
         return
     
 
@@ -92,7 +92,7 @@ async def on_message(message):
 
     if crc12(bmessage) == 359:   
             try:
-                await send(file=discord.File('assets/users/sadra.jpg'))
+                await message.reply(file=discord.File('assets/users/sadra.jpg'), mention_author=False)
                 print("sending pic")
             except:
                 safe_channel = bot.get_channel(340499300754915329)
@@ -358,3 +358,5 @@ async def restart(ctx):
 
 
 bot.run(TOKEN)
+
+
