@@ -80,7 +80,7 @@ async def on_message(message):
         if not message.content.lower().find(word_list[i]):
             trigger = word_list[i]
             break
-    if msg.author == client.user:
+    if message.author == bot.user:
         return
     
 
@@ -358,4 +358,5 @@ async def restart(ctx):
 
 
 bot.run(TOKEN)
+
 
