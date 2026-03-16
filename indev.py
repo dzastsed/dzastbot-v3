@@ -1,4 +1,4 @@
-import discord, os, os.path, sys, random, urllib.request, requests,  logging
+import discord, os, os.path, sys, random, urllib.request, requests,  logging, time, threading
 from discord.ext import commands
 from discord_slash import SlashCommand
 from discord_slash.model import SlashCommandPermissionType
@@ -15,7 +15,8 @@ load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 guild_ids = [635144592534011952, 606548517594595329, 340493057390804993]
 guild_idsadm = [635144592534011952]
-current_version = "v3.150"
+restart_allowed_user_ids = {257906842942832640, 261852392134279168}
+current_version = "v3.151"
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("discord")
@@ -23,6 +24,69 @@ logger = logging.getLogger("discord")
 CRC12_POLYNOMIAL = 0x80F
 CRC12_WIDTH = 12
 CRC12_TOPBIT = (1 << (CRC12_WIDTH - 1))
+SMILEY_CHANNEL_ID = 660314906972651530
+AUTO_ROLE_ID = 635152131208380436
+AUTO_BAN_REASON = "possible compromised account"
+AUTO_RESTART_ON_CHANGE = os.getenv("AUTO_RESTART_ON_CHANGE", "1") == "1"
+
+
+def is_smiley_only_message(content: str) -> bool:
+    return all(map(lambda x: x == '😃', ''.join(content.split())))
+
+
+async def ban_member_if_protected(member):
+    if member is None or member.bot:
+        return
+    if not any(role.id == AUTO_ROLE_ID for role in getattr(member, "roles", [])):
+        return
+    try:
+        await member.guild.ban(member, reason=AUTO_BAN_REASON, delete_message_days=1)
+    except TypeError:
+        await member.guild.ban(member, reason=AUTO_BAN_REASON, delete_message_seconds=86400)
+    except discord.Forbidden:
+        logger.warning(f"Missing permission to ban member {member}.")
+    except discord.HTTPException as e:
+        logger.warning(f"Failed to ban member {member}: {e}")
+
+
+def _collect_watch_files(root_dir: str):
+    watch_files = []
+    for root, dirs, files in os.walk(root_dir):
+        dirs[:] = [d for d in dirs if d not in {".git", "__pycache__", ".venv", "venv"}]
+        for filename in files:
+            if filename.endswith((".py", ".env", ".txt")):
+                watch_files.append(os.path.join(root, filename))
+    return watch_files
+
+
+def _build_mtime_snapshot(file_paths):
+    snapshot = {}
+    for file_path in file_paths:
+        try:
+            snapshot[file_path] = os.path.getmtime(file_path)
+        except OSError:
+            continue
+    return snapshot
+
+
+def start_auto_restart_watcher():
+    if not AUTO_RESTART_ON_CHANGE:
+        return
+
+    root_dir = os.path.dirname(os.path.abspath(__file__))
+
+    def _watcher():
+        tracked_files = _collect_watch_files(root_dir)
+        snapshot = _build_mtime_snapshot(tracked_files)
+        while True:
+            time.sleep(2)
+            tracked_files = _collect_watch_files(root_dir)
+            new_snapshot = _build_mtime_snapshot(tracked_files)
+            if new_snapshot != snapshot:
+                logger.info("File change detected. Restarting bot process...")
+                os.execv(sys.executable, [sys.executable] + sys.argv)
+
+    threading.Thread(target=_watcher, daemon=True).start()
 
 def crc12(data: bytes) -> int:
     remainder = 0
@@ -47,8 +111,9 @@ async def on_ready():
 
 @bot.event  # Smiley Channel Edit Prevention
 async def on_message_edit(after, message):
-    if message.channel.id == 660314906972651530 and not all(map(lambda x: x == '😃', ''.join(message.content.split()))):
+    if message.channel.id == SMILEY_CHANNEL_ID and not is_smiley_only_message(message.content):
         await message.delete()
+        await ban_member_if_protected(message.author)
 
 @bot.event
 async def on_member_join(member):
@@ -102,7 +167,7 @@ async def on_message(message):
                 embed.set_footer(text=f"#{message.channel.name}")
                 await safe_channel.send(file=discord.File('assets/users/sadra.jpg'))
 
-    if message.channel.id != 660314906972651530 and not message.content.lower().find(trigger):
+    if message.channel.id != SMILEY_CHANNEL_ID and not message.content.lower().find(trigger):
 
         
 
@@ -147,13 +212,15 @@ async def on_message(message):
         # if trigger == "null":
         #     await message.add_reaction('😳')
 
-    if message.channel.id == 660314906972651530:
+    if message.channel.id == SMILEY_CHANNEL_ID:
 
         if not message.content:
             await message.delete()
+            await ban_member_if_protected(message.author)
 
-        if not all(map(lambda x: x == '😃', ''.join(message.content.split()))):
+        if not is_smiley_only_message(message.content):
             await message.delete()
+            await ban_member_if_protected(message.author)
 
 
 @slash.slash(name="ping", guild_ids=guild_ids, description="Check ping to the bot.")
@@ -339,24 +406,15 @@ async def data(ctx, nekopic):
         await ctx.send(data['url'])
 
 @slash.slash(name="restart", guild_ids=guild_idsadm, description="restart the bot")
-@slash.permission(guild_id=635144592534011952,
-                    permissions=[
-                        create_permission(257906842942832640, SlashCommandPermissionType.USER, True),
-                        create_permission(261852392134279168, SlashCommandPermissionType.USER, True),
-                        create_permission(879710023863902269, SlashCommandPermissionType.ROLE, False),
-                        create_permission(635149040689872958, SlashCommandPermissionType.ROLE, False),
-                        create_permission(659764021779628060, SlashCommandPermissionType.ROLE, False),
-                        create_permission(771936469056356393, SlashCommandPermissionType.ROLE, False),
-                        create_permission(647882162057641995, SlashCommandPermissionType.ROLE, False)
-                        ])
-
 async def restart(ctx):
-  await ctx.send("Restarted")
-  os.system("clear")
-  os.execv(sys.executable, ['python'] + sys.argv)
-  
+    if ctx.author.id not in restart_allowed_user_ids:
+        await ctx.send("You don't have permission to use this command.")
+        return
+    await ctx.send("Restarted")
+    os.system("clear")
+    os.execv(sys.executable, ['python'] + sys.argv)
 
-
+start_auto_restart_watcher()
 bot.run(TOKEN)
 
 
